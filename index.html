@@ -4,249 +4,154 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SofaScore</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #374DF5; /* SofaScore Mavisi */
-      --bg: #EDEFF4;      /* Arka Plan Grisi */
+      --primary: #374DF5; 
+      --bg: #EDEFF4;
       --surface: #FFFFFF;
-      --text-main: #121619;
-      --text-sec: #7F8C9D;
-      --live: #E53935;
+      --text: #121619;
+      --subtext: #7F8C9D;
       --border: #DCE0E4;
     }
-
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: var(--bg);
-      margin: 0; padding: 0;
-      color: var(--text-main);
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* HEADER */
-    header {
-      background-color: var(--primary);
-      height: 64px;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 4px 12px rgba(55, 77, 245, 0.2);
-      position: sticky; top: 0; z-index: 100;
-    }
-    .header-content { width: 100%; max-width: 800px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; }
-    .logo { color: #fff; font-weight: 900; font-size: 24px; letter-spacing: -0.5px; text-transform: uppercase; font-style: italic; }
+    body { font-family: 'Roboto', sans-serif; background: var(--bg); margin: 0; color: var(--text); }
     
-    /* SPOR TABS */
-    .sports-bar { background: var(--primary); padding-bottom: 0; display: flex; justify-content: center; }
-    .sport-tab { 
-      padding: 12px 20px; color: rgba(255,255,255,0.7); font-weight: 500; font-size: 14px; text-transform: uppercase; cursor: pointer; border-bottom: 4px solid transparent; 
-    }
-    .sport-tab.active { color: #fff; border-bottom-color: #fff; }
+    /* Header */
+    header { background: var(--primary); height: 64px; display: flex; align-items: center; padding: 0 20px; position: sticky; top: 0; z-index: 99; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .logo { color: #fff; font-weight: 900; font-size: 22px; text-transform: uppercase; font-style: italic; letter-spacing: -1px; }
+    
+    /* Tabs */
+    .tabs { background: var(--primary); display: flex; justify-content: center; gap: 20px; padding-bottom: 0; }
+    .tab { padding: 12px 20px; color: rgba(255,255,255,0.7); font-weight: 700; font-size: 13px; text-transform: uppercase; cursor: pointer; border-bottom: 4px solid transparent; }
+    .tab.active { color: #fff; border-bottom-color: #fff; }
 
-    /* TARİH ÇUBUĞU */
-    .date-strip {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 10px 0;
-      display: flex; justify-content: center; gap: 20px;
-      font-size: 12px; font-weight: 700; color: var(--text-sec);
-      text-transform: uppercase;
-    }
-    .date-item.active { color: var(--primary); }
+    /* Container */
+    .container { max-width: 800px; margin: 20px auto; padding: 0 10px; }
 
-    .container { max-width: 800px; margin: 20px auto; padding: 0 16px; }
-
-    /* LİG KARTI */
-    .league-card {
-      background: var(--surface);
-      border-radius: 16px; /* Sofa Style */
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-      margin-bottom: 16px; overflow: hidden;
-    }
-    .league-header {
-      padding: 16px;
-      display: flex; align-items: center; gap: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    .flag-icon { width: 24px; height: 24px; border-radius: 50%; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #999; }
+    /* Cards */
+    .card { background: var(--surface); border-radius: 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); overflow: hidden; }
+    
+    .league-header { padding: 12px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); background: #FBFBFB; }
+    .flag { width: 20px; height: 20px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #666; font-weight: bold; }
     .league-info { display: flex; flex-direction: column; }
-    .league-name { font-weight: 700; font-size: 14px; color: var(--text-sec); }
-    .country-name { font-size: 12px; color: var(--text-sec); opacity: 0.8; }
+    .league-name { font-weight: 700; font-size: 13px; color: var(--subtext); }
+    .country { font-size: 11px; color: var(--subtext); opacity: 0.8; }
 
-    /* MAÇ SATIRI */
-    .match-row {
-      display: flex; padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer; transition: background 0.2s;
-    }
+    .match-row { display: flex; padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
     .match-row:last-child { border-bottom: none; }
-    .match-row:hover { background: #f8f9fa; }
+    .match-row:hover { background: #F8F9FA; }
 
-    .status-col {
-      width: 50px; border-right: 1px solid var(--border); margin-right: 16px;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      font-size: 12px; color: var(--text-sec);
-    }
-    .status-col.live { color: var(--live); }
-
-    .teams-col { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
-    .team { display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: var(--text-main); }
+    .status-col { width: 50px; border-right: 1px solid var(--border); margin-right: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 11px; color: var(--subtext); }
+    .teams-col { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+    .team { display: flex; justify-content: space-between; font-size: 14px; }
     .team.winner { font-weight: 700; }
-    .score { font-weight: 700; color: var(--text-main); }
-    .score.live { color: var(--live); }
+    .score { font-weight: 700; }
 
-    .loading { text-align: center; padding: 40px; color: var(--text-sec); }
-    .error { background: #ffebee; color: #c62828; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; display: none; }
+    .loading { text-align: center; padding: 40px; color: var(--subtext); }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="header-content">
-    <div class="logo">SofaScore</div>
-    <div style="font-size:20px; color:#fff">🔍</div>
-  </div>
-</header>
-<div class="sports-bar">
-  <div class="sport-tab active" onclick="loadSport('football', this)">FUTBOL</div>
-  <div class="sport-tab" onclick="loadSport('basketball', this)">BASKETBOL</div>
-</div>
-
-<div class="date-strip">
-  <div class="date-item">Dün</div>
-  <div class="date-item active">Bugün</div>
-  <div class="date-item">Yarın</div>
+<header><div class="logo">SofaScore</div></header>
+<div class="tabs">
+  <div class="tab active" onclick="loadSport('football', this)">Futbol</div>
+  <div class="tab" onclick="loadSport('basketball', this)">Basketbol</div>
 </div>
 
 <div class="container">
-  <div id="error-box" class="error"></div>
-  <div id="match-list"><div class="loading">Maçlar yükleniyor...</div></div>
+  <div id="list-area"><div class="loading">Yükleniyor...</div></div>
 </div>
 
 <script>
 const API_KEY = "8aPROa85kIgwqnTOhMQFEokJ4Jtc6oY1Pn9DUG7G"; 
 let currentSport = 'football';
 
-// Başlangıç
-loadSport('football', document.querySelector('.sport-tab'));
+loadSport('football', document.querySelector('.tab.active'));
 
 async function loadSport(sport, btn) {
   currentSport = sport;
-  // Tab UI
-  document.querySelectorAll('.sport-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   if(btn) btn.classList.add('active');
 
-  const listDiv = document.getElementById("match-list");
-  const errorBox = document.getElementById("error-box");
-  listDiv.innerHTML = '<div class="loading">Veriler Çekiliyor...</div>';
-  errorBox.style.display = 'none';
+  const area = document.getElementById('list-area');
+  area.innerHTML = '<div class="loading">Veriler alınıyor...</div>';
 
   try {
-    let url = "";
-    if(sport === 'football') url = "/api/soccer/league/1/matches?page=1&perPage=50";
-    else url = "/api/basket/competitions/7522";
-
+    let url = sport === 'football' ? "/api/soccer/league/1/matches?page=1&perPage=50" : "/api/basket/competitions/7522";
+    
     const res = await fetch(url, { headers: { "sportbex-api-key": API_KEY } });
-    if (!res.ok) throw new Error("API Hatası: " + res.status);
-    
     const json = await res.json();
-    let data = [];
     
+    let data = [];
     if(sport === 'football') {
-        // Futbol Veri Ayrıştırma
         if(Array.isArray(json)) data = json;
         else if(json.results) data = json.results;
         else if(json.data) data = json.data;
         
-        if(data.length === 0) listDiv.innerHTML = '<div class="loading">Maç bulunamadı.</div>';
+        if(data.length === 0) area.innerHTML = '<div class="loading">Maç bulunamadı.</div>';
         else renderFootball(data);
-
     } else {
-        // Basketbol Veri Ayrıştırma
         data = Array.isArray(json) ? json : (json.result || []);
-        if(data.length === 0) listDiv.innerHTML = '<div class="loading">Lig bulunamadı.</div>';
+        if(data.length === 0) area.innerHTML = '<div class="loading">Lig bulunamadı.</div>';
         else renderBasketball(data);
     }
-
-  } catch (err) {
-    errorBox.style.display = 'block';
-    errorBox.innerHTML = `Hata: ${err.message}<br><small>Lütfen Vercel'e yüklediğinden emin ol.</small>`;
-    listDiv.innerHTML = "";
+  } catch (e) {
+    area.innerHTML = '<div class="loading">Hata oluştu.</div>';
   }
 }
 
 function renderFootball(matches) {
-  const listDiv = document.getElementById("match-list");
-  
-  // Liglere Göre Grupla
+  const area = document.getElementById('list-area');
   const grouped = {};
+  
   matches.forEach(m => {
-    let league = m.competition?.name || m.league_name || "Diğer Ligler";
+    let league = m.competition?.name || "Diğer Ligler";
     if(!grouped[league]) grouped[league] = [];
     grouped[league].push(m);
   });
 
   let html = "";
   for (const [league, items] of Object.entries(grouped)) {
-    html += `
-    <div class="league-card">
-      <div class="league-header">
-        <div class="flag-icon">${league.charAt(0)}</div>
-        <div class="league-info">
-          <span class="league-name">${league}</span>
-          <span class="country-name">International</span>
-        </div>
-      </div>`;
+    html += `<div class="card"><div class="league-header"><div class="flag">${league.charAt(0)}</div><div class="league-info"><span class="league-name">${league}</span></div></div>`;
     
     items.forEach(m => {
-      let h = m.homeTeam?.name || m.home_team || "Ev Sahibi";
-      let a = m.awayTeam?.name || m.away_team || "Deplasman";
+      let h = m.homeTeam?.name || "Ev Sahibi";
+      let a = m.awayTeam?.name || "Deplasman";
       let hs = m.score?.home ?? "-";
       let as = m.score?.away ?? "-";
-      let time = m.matchDate ? new Date(m.matchDate).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'}) : 'MS';
-      let id = m.matchId || m.id || m._id;
-      let url = id ? `match.html?id=${id}` : '#';
+      let id = m.matchId || m.id;
+      // BURASI ÖNEMLİ: Sport belirtiyoruz
+      let url = id ? `match.html?id=${id}&sport=football` : '#';
 
-      html += `
-      <div class="match-row" onclick="location.href='${url}'">
-        <div class="status-col">
-          <span>${time}</span>
-          <span style="font-size:10px; opacity:0.7">FT</span>
-        </div>
+      html += `<div class="match-row" onclick="location.href='${url}'">
+        <div class="status-col"><span>MS</span></div>
         <div class="teams-col">
-          <div class="team ${hs > as ? 'winner':''}">
-            <span>${h}</span> <span class="score">${hs}</span>
-          </div>
-          <div class="team ${as > hs ? 'winner':''}">
-            <span>${a}</span> <span class="score">${as}</span>
-          </div>
+          <div class="team"><span>${h}</span><span class="score">${hs}</span></div>
+          <div class="team"><span>${a}</span><span class="score">${as}</span></div>
         </div>
       </div>`;
     });
     html += `</div>`;
   }
-  listDiv.innerHTML = html;
+  area.innerHTML = html;
 }
 
 function renderBasketball(leagues) {
-    const listDiv = document.getElementById("match-list");
+    const area = document.getElementById('list-area');
     let html = "";
     leagues.forEach(l => {
         let name = l.competition?.name || l.name;
-        let region = l.competition?.competitionRegion || "Dünya";
         let id = l.competition?.id;
-        
-        html += `
-        <div class="league-card" onclick="alert('Basketbol ID: ${id}')">
+        // Basketbolda lige tıklayınca ID'yi alert ile görelim (Şimdilik)
+        // Çünkü bu API'de basketbol fikstürü çekmek karmaşık
+        html += `<div class="card" onclick="alert('Basketbol ID: ${id}')">
             <div class="match-row">
-                <div class="status-col" style="border:none; color:var(--primary); font-weight:bold">LİG</div>
-                <div class="teams-col">
-                    <div class="team winner" style="font-size:16px">${name}</div>
-                    <div class="country-name">${region}</div>
-                </div>
+                <div class="status-col" style="color:#FF9800; font-weight:bold">BSK</div>
+                <div class="teams-col"><div class="team winner" style="font-size:16px">${name}</div></div>
             </div>
         </div>`;
     });
-    listDiv.innerHTML = html;
+    area.innerHTML = html;
 }
 </script>
 </body>
