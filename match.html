@@ -3,17 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maç Analizi</title>
+  <title>Maç Detayı</title>
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     :root { 
       --gold: #FFD700; 
       --dark-bg: #0a0a0a; 
-      --card-bg: rgba(30, 30, 30, 0.7); 
       --text: #ffffff; 
-      --accent: #FF5252;
     }
-    
     body { 
       font-family: 'Inter', sans-serif; margin: 0; padding: 0; 
       color: var(--text); background: var(--dark-bg);
@@ -21,19 +18,11 @@
       background-size: cover; background-attachment: fixed;
     }
 
-    /* Üst Skor Alanı */
     .header { 
       padding: 40px 20px; text-align: center; 
       background: radial-gradient(circle at center, rgba(255, 215, 0, 0.1) 0%, rgba(10,10,10,0) 70%);
       border-bottom: 1px solid rgba(255,255,255,0.1);
     }
-    
-    .match-time-info {
-      font-size: 12px; color: #888; background: rgba(0,0,0,0.5); 
-      padding: 5px 15px; border-radius: 20px; display: inline-block; margin-bottom: 15px;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
     .scoreboard { display: flex; justify-content: center; align-items: center; gap: 15px; }
     .team-name { font-size: 18px; font-weight: 700; width: 40%; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
     .score-display { 
@@ -41,62 +30,32 @@
       color: var(--gold); text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
     }
 
-    /* Sekmeler */
-    .tabs { display: flex; justify-content: center; background: rgba(255,255,255,0.05); margin-top: 20px; }
-    .tab { 
-      flex: 1; text-align: center; padding: 15px; cursor: pointer; 
-      color: #aaa; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
-      transition: 0.3s; border-bottom: 2px solid transparent;
-    }
-    .tab.active { color: var(--gold); border-bottom: 2px solid var(--gold); background: rgba(255, 215, 0, 0.05); }
-
     .content { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .section { display: none; animation: fadeIn 0.4s ease; }
-    .section.active { display: block; }
-    @keyframes fadeIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
-
+    
     /* AI Kutusu */
     .ai-box {
       background: linear-gradient(145deg, rgba(30,30,30,0.8), rgba(20,20,20,0.9));
       border: 1px solid rgba(255, 215, 0, 0.3);
       border-radius: 12px; padding: 20px; margin-bottom: 20px;
-      position: relative; overflow: hidden;
     }
-    .ai-box::before {
-      content: "AI ANALYZER V2.0";
-      position: absolute; top: 10px; right: 10px;
-      font-size: 9px; color: var(--gold); opacity: 0.5; font-family: monospace;
-    }
-    .ai-title { color: var(--gold); font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .ai-title { color: var(--gold); font-weight: bold; margin-bottom: 10px; }
     .ai-text { font-size: 14px; line-height: 1.6; color: #ddd; }
-    
-    .perf-bar-container { margin-top: 15px; }
-    .perf-label { font-size: 11px; color: #aaa; display: flex; justify-content: space-between; margin-bottom: 5px; }
-    .perf-bar-bg { background: rgba(255,255,255,0.1); height: 6px; border-radius: 3px; overflow: hidden; }
-    .perf-bar-fill { height: 100%; background: var(--gold); border-radius: 3px; width: 0%; transition: width 1s ease; }
 
-    /* H2H Listesi */
-    .h2h-item {
-      display: flex; justify-content: space-between; align-items: center;
-      background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; margin-bottom: 8px;
-      font-size: 13px; border-left: 3px solid transparent;
-    }
-    .h2h-item.win { border-left-color: #4CAF50; }
-    .h2h-item.draw { border-left-color: #FFC107; }
+    /* Market (Basketbol için) */
+    .market-box { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+    .runner-row { display: flex; justify-content: space-between; font-size: 13px; margin-top:5px; }
 
     .back-btn { 
       position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
       background: #111; border: 1px solid var(--gold); color: var(--gold); 
       padding: 10px 30px; border-radius: 30px; text-decoration: none; 
-      font-size: 12px; font-weight: bold; box-shadow: 0 5px 20px rgba(0,0,0,0.5); z-index: 99;
+      font-size: 12px; font-weight: bold;
     }
   </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="match-time-info" id="timezone-info">--:--</div>
-  
   <div class="scoreboard">
     <div class="team-name" id="home">...</div>
     <div class="score-display" id="score">-:-</div>
@@ -104,31 +63,9 @@
   </div>
 </div>
 
-<div class="tabs">
-  <div class="tab active" onclick="switchTab('ai')">YAPAY ZEKA</div>
-  <div class="tab" onclick="switchTab('h2h')">GEÇMİŞ (H2H)</div>
-  <div class="tab" onclick="switchTab('stats')">İSTATİSTİK</div>
-</div>
-
 <div class="content">
-
-  <div id="ai" class="section active">
-    <div id="ai-content">
-      <div style="text-align:center; color:#666;">Analiz yapılıyor...</div>
-    </div>
-  </div>
-
-  <div id="h2h" class="section">
-    <div id="h2h-list">
-       </div>
-  </div>
-  
-  <div id="stats" class="section">
-     <div style="text-align:center; padding:30px; color:#666; font-size:13px;">
-       Detaylı istatistikler API sağlayıcısı tarafından bekleniyor...
-     </div>
-  </div>
-
+  <div id="ai-area"></div>
+  <div id="details-area"></div>
 </div>
 
 <a href="index.html" class="back-btn">← LİSTEYE DÖN</a>
@@ -136,111 +73,90 @@
 <script>
 const urlParams = new URLSearchParams(window.location.search);
 const matchId = urlParams.get('id');
+const sport = urlParams.get('sport') || 'football';
 const API_KEY = "8aPROa85kIgwqnTOhMQFEokJ4Jtc6oY1Pn9DUG7G"; 
 
-// Sayfa Yüklenince
-document.addEventListener('DOMContentLoaded', () => {
-    // Saat Dilimini Bul (Örn: GMT+3)
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const offset = -(new Date().getTimezoneOffset() / 60);
-    const sign = offset >= 0 ? '+' : '-';
-    document.getElementById('timezone-info').innerText = `Saat Dilimi: GMT${sign}${offset} (${timeZone})`;
-    
-    init();
-});
+// Renk Ayarı
+if(sport === 'basketball') {
+    document.documentElement.style.setProperty('--gold', '#FF9800');
+}
+
+init();
 
 async function init() {
   if(!matchId) return;
-  
-  try {
-    const res = await fetch(`/api/sportbex/match/${matchId}`, {
-        headers: { "sportbex-api-key": API_KEY }
-    });
-    
-    const data = await res.json();
-    const m = data.result || data;
-    
-    // Verileri Yerleştir
-    const hName = m.homeTeam?.name || m.home_team || "Ev Sahibi";
-    const aName = m.awayTeam?.name || m.away_team || "Deplasman";
-    const hs = m.score?.home ?? m.home_score ?? 0;
-    const as = m.score?.away ?? m.away_score ?? 0;
+  const aiArea = document.getElementById('ai-area');
+  const detailsArea = document.getElementById('details-area');
 
-    document.getElementById('home').innerText = hName;
-    document.getElementById('away').innerText = aName;
-    document.getElementById('score').innerText = `${hs}:${as}`;
+  if (sport === 'basketball') {
+      // --- BASKETBOL ---
+      document.getElementById('score').innerText = "VS";
+      
+      try {
+          const res = await fetch(`/api/basket/markets/7522/${matchId}`, { headers: { "sportbex-api-key": API_KEY } });
+          const data = await res.json();
+          let markets = Array.isArray(data) ? data : (data.result || []);
 
-    // 1. AI Yorumunu Oluştur (Simülasyon)
-    generateAIAnalysis(hName, aName, hs, as);
+          if(markets.length > 0 && markets[0].runners) {
+              let hName = markets[0].runners[0]?.runnerName;
+              let aName = markets[0].runners[1]?.runnerName;
+              document.getElementById('home').innerText = hName;
+              document.getElementById('away').innerText = aName;
+              
+              // Basketbol AI
+              aiArea.innerHTML = generateAI(hName, aName, 'Basketbol');
+          }
 
-    // 2. H2H Verisi Oluştur (Simülasyon - API'de yoksa doldurur)
-    generateH2H(hName, aName);
+          let html = "";
+          markets.forEach(m => {
+              html += `<div class="market-box"><div style="color:var(--gold); font-size:12px; font-weight:bold">${m.marketName}</div>`;
+              if(m.runners) {
+                  m.runners.forEach(r => {
+                      html += `<div class="runner-row"><span>${r.runnerName}</span> <span>${r.lastPriceTraded || '-'}</span></div>`;
+                  });
+              }
+              html += `</div>`;
+          });
+          detailsArea.innerHTML = html;
 
-  } catch(e) {
-    document.getElementById('ai-content').innerHTML = "Veri hatası oluştu.";
+      } catch (e) { detailsArea.innerHTML = "Veri hatası."; }
+
+  } else {
+      // --- FUTBOL ---
+      try {
+          const res = await fetch(`/api/sportbex/match/${matchId}`, { headers: { "sportbex-api-key": API_KEY } });
+          const data = await res.json();
+          const m = data.result || data;
+          
+          let hName = m.homeTeam?.name || m.home_team || "Ev Sahibi";
+          let aName = m.awayTeam?.name || m.away_team || "Deplasman";
+          let hs = m.score?.home ?? m.home_score ?? 0;
+          let as = m.score?.away ?? m.away_score ?? 0;
+
+          document.getElementById('home').innerText = hName;
+          document.getElementById('away').innerText = aName;
+          document.getElementById('score').innerText = `${hs}:${as}`;
+
+          // Futbol AI
+          aiArea.innerHTML = generateAI(hName, aName, 'Futbol');
+          
+      } catch(e) { detailsArea.innerHTML = "Veri alınamadı."; }
   }
 }
 
-// YAPAY ZEKA SİMÜLASYONU
-function generateAIAnalysis(home, away, hScore, aScore) {
-    // Takım gücünü ismin uzunluğundan uyduran basit bir random algoritma (Görsellik için)
-    const hPower = Math.floor(Math.random() * 40) + 40; 
-    const aPower = Math.floor(Math.random() * 40) + 40;
-    
-    const comment = `
-        <div class="ai-box">
-            <div class="ai-title">⚡ Misliscore AI Tahmini</div>
-            <div class="ai-text">
-                Her iki takımın son dönemdeki oyuncu performans verileri incelendiğinde, 
-                <strong>${home}</strong> özellikle iç sahada baskılı bir oyun sergiliyor. 
-                <strong>${away}</strong> ise kontrataklarda tehlikeli pozisyonlar bulabilir.
-                <br><br>
-                Maçın genel temposunun yüksek olması bekleniyor. Yapay zeka, bu maçta 
-                <strong>2.5 ÜST</strong> gol ihtimalini %${Math.floor(Math.random()*20)+60} olarak hesapladı.
-            </div>
-            
-            <div class="perf-bar-container">
-                <div class="perf-label"><span>${home} Takım Formu</span> <span>%${hPower}</span></div>
-                <div class="perf-bar-bg"><div class="perf-bar-fill" style="width:${hPower}%"></div></div>
-            </div>
-            <div class="perf-bar-container">
-                <div class="perf-label"><span>${away} Takım Formu</span> <span>%${aPower}</span></div>
-                <div class="perf-bar-bg"><div class="perf-bar-fill" style="width:${aPower}%"></div></div>
-            </div>
-        </div>
-    `;
-    document.getElementById('ai-content').innerHTML = comment;
-}
-
-// GEÇMİŞ MAÇLAR (H2H) SİMÜLASYONU
-function generateH2H(home, away) {
-    const list = document.getElementById('h2h-list');
-    let html = "";
-    
-    // Rastgele 3-4 maç üret
-    for(let i=0; i<4; i++) {
-        const hGoal = Math.floor(Math.random() * 4);
-        const aGoal = Math.floor(Math.random() * 3);
-        const year = 2024 - i;
-        
-        // Renk sınıfı (Win/Draw/Lose)
-        let statusClass = hGoal > aGoal ? 'win' : (hGoal === aGoal ? 'draw' : '');
-        
-        html += `
-            <div class="h2h-item ${statusClass}">
-                <div style="color:#888">${year}</div>
-                <div style="font-weight:bold">${home} ${hGoal} - ${aGoal} ${away}</div>
-            </div>
-        `;
+function generateAI(h, a, type) {
+    let text = "";
+    if(type === 'Futbol') {
+        text = `<strong>${h}</strong> son haftalarda evinde etkili. <strong>${a}</strong> ise savunma odaklı çıkabilir. Maçta 2.5 ÜST gol beklentisi yüksek.`;
+    } else {
+        text = `<strong>${h}</strong> pota altında üstün görünüyor. <strong>${a}</strong> üçlük yüzdesiyle maça tutunabilir. Yüksek skorlu bir maç (160+ sayı) bekleniyor.`;
     }
-    list.innerHTML = html;
-}
 
-function switchTab(id) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    event.target.classList.add('active');
-    document.getElementById(id).classList.add('active');
+    return `
+    <div class="ai-box">
+        <div class="ai-title">🤖 AI TAHMİNİ (${type})</div>
+        <div class="ai-text">${text}</div>
+    </div>`;
 }
 </script>
 </body>
