@@ -12,7 +12,6 @@
     header { background: rgba(30, 30, 30, 0.9); backdrop-filter: blur(10px); padding: 15px; text-align: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
     .logo { font-size: 24px; font-weight: 900; color: var(--primary); letter-spacing: -1px; }
 
-    /* Butonlar */
     .sport-tabs { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
     .sport-btn {
       background: transparent; border: 1px solid var(--border); color: #888;
@@ -22,22 +21,14 @@
     .sport-btn.active-bas { background: var(--basket); color: #000; border-color: var(--basket); }
     
     .back-btn { display:none; margin: 10px auto; background: #333; color: #fff; border: 1px solid #555; padding: 5px 15px; border-radius: 15px; cursor: pointer; font-size: 12px; }
-
     .container { max-width: 600px; margin: 20px auto; padding: 0 15px; }
-
-    .match-card {
-      background: var(--card); border: 1px solid var(--border); border-radius: 12px;
-      padding: 16px; margin-bottom: 12px; display: flex; align-items: center;
-      transition: transform 0.2s; cursor: pointer;
-    }
+    .match-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; transition: transform 0.2s; cursor: pointer; }
     .match-card:hover { transform: translateY(-3px); border-color: #555; }
-    
     .time-box { width: 50px; text-align: center; font-size: 11px; color: #888; border-right: 1px solid var(--border); margin-right: 15px; display: flex; flex-direction: column; justify-content: center; }
     .teams { flex: 1; }
     .team-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 14px; font-weight: 600; }
     .league-name { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
     .score { font-family: monospace; font-size: 14px; background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px; }
-    
     .loading { text-align: center; color: #666; margin-top: 50px; }
     .error-msg { background: rgba(244, 67, 54, 0.1); color: #ff5252; padding: 15px; border-radius: 8px; text-align: center; display: none; margin-top: 20px;}
   </style>
@@ -61,37 +52,26 @@
 </div>
 
 <script>
+// --- AYARLAR ---
+const API_KEY = "8aPROa85kIgwqnTOhMQFEokJ4Jtc6oY1Pn9DUG7G"; 
 let currentSport = 'football';
 
-// Sayfa ilk açıldığında çalıştır
-document.addEventListener('DOMContentLoaded', () => {
-    init();
-});
+document.addEventListener('DOMContentLoaded', () => { init(); });
 
 function switchSport(sport, btn) {
   currentSport = sport;
-  
-  // Buton stillerini ayarla
-  document.querySelectorAll('.sport-btn').forEach(b => {
-      b.classList.remove('active-fut');
-      b.classList.remove('active-bas');
-  });
-  
+  document.querySelectorAll('.sport-btn').forEach(b => { b.className = 'sport-btn'; });
   if(sport === 'football') btn.classList.add('active-fut');
   else btn.classList.add('active-bas');
   
-  // Geri butonunu gizle ve listeyi sıfırla
   document.getElementById('basket-back').style.display = 'none';
   document.getElementById("match-list").innerHTML = '<div class="loading">Veriler Çekiliyor...</div>';
-  
-  // Fonksiyonu çalıştır
   init();
 }
 
 async function init() {
   const listDiv = document.getElementById("match-list");
   const errorDiv = document.getElementById("error-area");
-  
   listDiv.innerHTML = '<div class="loading">Yükleniyor...</div>';
   errorDiv.style.display = 'none';
   document.getElementById('basket-back').style.display = 'none';
@@ -101,24 +81,22 @@ async function init() {
     if (currentSport === 'football') {
         endpoint = "/api/sportbex/league/1/matches?page=1&perPage=20"; 
     } else {
-        // Basketbol Ligleri (ID: 7522)
         endpoint = "/api/basket/competitions/7522"; 
     }
 
-    console.log("İstek gönderiliyor:", endpoint); // Hata ayıklama
+    // VERCEL İÇİN HEADER'I BURADAN GÖNDERİYORUZ
+    const res = await fetch(endpoint, {
+        headers: { "sportbex-api-key": API_KEY }
+    });
 
-    const res = await fetch(endpoint);
     if (!res.ok) throw new Error(`API Hatası: ${res.status}`);
     const data = await res.json();
     
-    console.log("Gelen Veri:", data); // Hata ayıklama
-
     let items = [];
     if(currentSport === 'football') {
        items = Array.isArray(data) ? data : (data.results || data.data || []);
        renderFootball(items);
     } else {
-       // Basketbol verisi 'result' içinde olabilir
        items = Array.isArray(data) ? data : (data.result || []);
        renderBasketCompetitions(items);
     }
@@ -127,18 +105,14 @@ async function init() {
     console.error(err);
     listDiv.innerHTML = "";
     errorDiv.style.display = 'block';
-    errorDiv.innerHTML = `Hata: ${err.message}<br><small>Lütfen Netlify'a yüklediğinden emin ol.</small>`;
+    errorDiv.innerHTML = `Hata: ${err.message}<br><small>Vercel.json dosyasını yüklediğinden emin ol.</small>`;
   }
 }
 
 function renderFootball(data) {
   const listDiv = document.getElementById("match-list");
   let html = "";
-  
-  if(data.length === 0) {
-      listDiv.innerHTML = "<div class='loading'>Şu an futbol maçı bulunamadı.</div>"; 
-      return;
-  }
+  if(data.length === 0) { listDiv.innerHTML = "<div class='loading'>Maç bulunamadı.</div>"; return; }
 
   data.forEach(m => {
     let h = m.homeTeam?.name || m.home_team || "Ev Sahibi";
@@ -146,7 +120,6 @@ function renderFootball(data) {
     let hs = m.score?.home ?? "-";
     let as = m.score?.away ?? "-";
     let time = m.matchDate ? new Date(m.matchDate).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'}) : 'MS';
-
     let id = m.matchId || m.id || m._id;
     let url = id ? `match.html?id=${id}&sport=football` : '#';
 
@@ -165,11 +138,7 @@ function renderFootball(data) {
 function renderBasketCompetitions(data) {
   const listDiv = document.getElementById("match-list");
   let html = "";
-  
-  if(data.length === 0) {
-      listDiv.innerHTML = "<div class='loading'>Aktif Basketbol ligi bulunamadı.</div>"; 
-      return;
-  }
+  if(data.length === 0) { listDiv.innerHTML = "<div class='loading'>Lig bulunamadı.</div>"; return; }
 
   data.forEach(item => {
     let comp = item.competition || item; 
@@ -178,7 +147,6 @@ function renderBasketCompetitions(data) {
     let count = item.marketCount || 0;
     let id = comp.id; 
 
-    // Tıklayınca loadBasketEvents çalışacak
     html += `
       <div class="match-card" style="border-left: 3px solid #FF9800;" onclick="loadBasketEvents('${id}', '${name}')">
         <div class="time-box" style="color:#FF9800">LİG</div>
@@ -192,23 +160,19 @@ function renderBasketCompetitions(data) {
   listDiv.innerHTML = html;
 }
 
-// Basketbol Ligi Detayına Git (Maçları Getir)
 async function loadBasketEvents(compId, compName) {
     const listDiv = document.getElementById("match-list");
     listDiv.innerHTML = `<div class='loading'>${compName} yükleniyor...</div>`;
     document.getElementById('basket-back').style.display = 'block';
 
     try {
-        // Event Endpoint'i: event/7522/{ligId}
-        const res = await fetch(`/api/basket/event/7522/${compId}`);
+        const res = await fetch(`/api/basket/event/7522/${compId}`, {
+             headers: { "sportbex-api-key": API_KEY }
+        });
         const data = await res.json();
-        
         let items = Array.isArray(data) ? data : (data.result || []);
         
-        if(items.length === 0) {
-            listDiv.innerHTML = "<div class='loading'>Bu ligde şu an açık maç yok.</div>";
-            return;
-        }
+        if(items.length === 0) { listDiv.innerHTML = "<div class='loading'>Maç yok.</div>"; return; }
 
         let html = "";
         items.forEach(item => {
@@ -216,8 +180,6 @@ async function loadBasketEvents(compId, compName) {
             let name = event.name; 
             let time = event.openDate ? new Date(event.openDate).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'}) : 'VS';
             let id = event.id;
-
-            // Maça Tıklayınca Detay Sayfasına Git
             let url = `match.html?id=${id}&sport=basketball`;
 
             html += `
@@ -230,7 +192,6 @@ async function loadBasketEvents(compId, compName) {
               </div>`;
         });
         listDiv.innerHTML = html;
-
     } catch (err) {
         listDiv.innerHTML = `<div class='loading'>Hata: ${err.message}</div>`;
     }
