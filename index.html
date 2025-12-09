@@ -3,155 +3,228 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SofaScore</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <title>Misliscore</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
+    /* --- TASARIM AYARLARI (GOLD & DARK) --- */
     :root {
-      --primary: #374DF5; 
-      --bg: #EDEFF4;
-      --surface: #FFFFFF;
-      --text: #121619;
-      --subtext: #7F8C9D;
-      --border: #DCE0E4;
+      --header-bg: #000000;
+      --sub-header: #1a1a1a;
+      --body-bg: #121212;
+      --card-bg: #1e1e1e;
+      --text-main: #e0e0e0;
+      --text-muted: #888888;
+      --gold: #FFD700;
+      --border: #333333;
+      --row-hover: #252525;
     }
-    body { font-family: 'Roboto', sans-serif; background: var(--bg); margin: 0; color: var(--text); }
-    
-    /* Header */
-    header { background: var(--primary); height: 64px; display: flex; align-items: center; padding: 0 20px; position: sticky; top: 0; z-index: 99; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-    .logo { color: #fff; font-weight: 900; font-size: 22px; text-transform: uppercase; font-style: italic; letter-spacing: -1px; }
-    
-    /* Tabs */
-    .tabs { background: var(--primary); display: flex; justify-content: center; gap: 20px; padding-bottom: 0; }
-    .tab { padding: 12px 20px; color: rgba(255,255,255,0.7); font-weight: 700; font-size: 13px; text-transform: uppercase; cursor: pointer; border-bottom: 4px solid transparent; }
-    .tab.active { color: #fff; border-bottom-color: #fff; }
 
-    /* Container */
-    .container { max-width: 800px; margin: 20px auto; padding: 0 10px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Roboto', sans-serif; background-color: var(--body-bg); color: var(--text-main); font-size: 13px; }
+    a { text-decoration: none; color: inherit; }
 
-    /* Cards */
-    .card { background: var(--surface); border-radius: 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); overflow: hidden; }
+    /* HEADER */
+    header {
+      background-color: var(--header-bg); height: 60px; display: flex; align-items: center; padding: 0 15%;
+      position: sticky; top: 0; z-index: 1000; border-bottom: 2px solid var(--gold);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    .logo { font-family: 'Rajdhani', sans-serif; font-size: 28px; font-weight: 700; color: #fff; margin-right: 50px; letter-spacing: 1px; }
+    .logo span { color: var(--gold); }
     
-    .league-header { padding: 12px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); background: #FBFBFB; }
-    .flag { width: 20px; height: 20px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #666; font-weight: bold; }
-    .league-info { display: flex; flex-direction: column; }
-    .league-name { font-weight: 700; font-size: 13px; color: var(--subtext); }
-    .country { font-size: 11px; color: var(--subtext); opacity: 0.8; }
+    /* NAVIGASYON (SPOR DALLARI) */
+    .main-nav { display: flex; gap: 20px; height: 100%; }
+    .nav-item { 
+      display: flex; align-items: center; height: 100%; cursor: pointer; color: #aaa; font-weight: 500;
+      border-bottom: 3px solid transparent; transition: 0.3s; font-size: 14px;
+    }
+    .nav-item:hover, .nav-item.active { color: var(--gold); border-bottom-color: var(--gold); }
 
-    .match-row { display: flex; padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
+    /* ALT MENÜ */
+    .sub-header { background: var(--sub-header); padding: 0 15%; height: 45px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+    .date-text { color: #888; font-weight: bold; }
+    
+    /* İÇERİK ALANI */
+    .container { display: flex; width: 70%; margin: 20px auto; gap: 20px; }
+    .content { flex: 1; }
+
+    /* KART VE LİSTE YAPISI */
+    .league-group { background: var(--card-bg); border: 1px solid var(--border); margin-bottom: 20px; border-radius: 6px; overflow: hidden; }
+    .lg-header {
+      background: linear-gradient(90deg, #252525 0%, #1e1e1e 100%); padding: 10px 15px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--text-main); font-size: 14px;
+    }
+    .flag { width: 4px; height: 16px; background: var(--gold); display: inline-block; border-radius: 2px; }
+
+    .match-row {
+      display: flex; align-items: center; padding: 12px 15px; border-bottom: 1px solid var(--border);
+      cursor: pointer; font-size: 14px; height: 55px; transition: background 0.2s;
+    }
     .match-row:last-child { border-bottom: none; }
-    .match-row:hover { background: #F8F9FA; }
+    .match-row:hover { background: var(--row-hover); }
 
-    .status-col { width: 50px; border-right: 1px solid var(--border); margin-right: 15px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 11px; color: var(--subtext); }
-    .teams-col { flex: 1; display: flex; flex-direction: column; gap: 6px; }
-    .team { display: flex; justify-content: space-between; font-size: 14px; }
-    .team.winner { font-weight: 700; }
-    .score { font-weight: 700; }
+    .m-status { width: 50px; font-size: 12px; text-align: center; color: var(--text-muted); display:flex; flex-direction:column; justify-content:center; }
+    .m-teams { flex: 1; display: flex; justify-content: space-between; padding: 0 30px; font-weight: 500; color: #fff; }
+    .m-score { 
+      background: #000; color: var(--gold); font-weight: 700; padding: 5px 12px; font-family: 'Rajdhani', sans-serif; 
+      font-size: 16px; border-radius: 4px; margin: 0 20px; width: 60px; text-align: center; border: 1px solid #333;
+    }
 
-    .loading { text-align: center; padding: 40px; color: var(--subtext); }
+    .loading { text-align: center; padding: 40px; color: var(--gold); font-size: 16px; }
+    .error-box { background: rgba(255, 0, 0, 0.1); color: #ff5252; padding: 15px; text-align: center; margin-bottom: 20px; border-radius: 6px; display: none; }
   </style>
 </head>
 <body>
 
-<header><div class="logo">SofaScore</div></header>
-<div class="tabs">
-  <div class="tab active" onclick="loadSport('football', this)">Futbol</div>
-  <div class="tab" onclick="loadSport('basketball', this)">Basketbol</div>
+<header>
+  <div class="logo">MISLI<span>SCORE</span></div>
+  <nav class="main-nav">
+    <div class="nav-item active" onclick="switchSport('football', this)">FUTBOL</div>
+    <div class="nav-item" onclick="switchSport('basketball', this)">BASKETBOL</div>
+  </nav>
+</header>
+
+<div class="sub-header">
+  <div class="date-text">CANLI SONUÇLAR</div>
+  <div style="font-size:11px; color:#555">Sportbex API v2</div>
 </div>
 
 <div class="container">
-  <div id="list-area"><div class="loading">Yükleniyor...</div></div>
+  <div class="content">
+    <div id="error-area" class="error-box"></div>
+    <div id="match-container"><div class="loading">Yükleniyor...</div></div>
+  </div>
 </div>
 
 <script>
 const API_KEY = "8aPROa85kIgwqnTOhMQFEokJ4Jtc6oY1Pn9DUG7G"; 
 let currentSport = 'football';
 
-loadSport('football', document.querySelector('.tab.active'));
+// Başlangıç
+init();
 
-async function loadSport(sport, btn) {
+function switchSport(sport, btn) {
   currentSport = sport;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  if(btn) btn.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  
+  // Renk değişimi (Opsiyonel)
+  if(sport === 'basketball') document.documentElement.style.setProperty('--gold', '#FF9800');
+  else document.documentElement.style.setProperty('--gold', '#FFD700');
 
-  const area = document.getElementById('list-area');
-  area.innerHTML = '<div class="loading">Veriler alınıyor...</div>';
+  document.getElementById("match-container").innerHTML = '<div class="loading">Veriler Çekiliyor...</div>';
+  init();
+}
+
+async function init() {
+  const listDiv = document.getElementById("match-container");
+  const errorDiv = document.getElementById("error-area");
+  errorDiv.style.display = 'none';
 
   try {
-    let url = sport === 'football' ? "/api/soccer/league/1/matches?page=1&perPage=50" : "/api/basket/competitions/7522";
-    
-    const res = await fetch(url, { headers: { "sportbex-api-key": API_KEY } });
-    const json = await res.json();
-    
-    let data = [];
-    if(sport === 'football') {
-        if(Array.isArray(json)) data = json;
-        else if(json.results) data = json.results;
-        else if(json.data) data = json.data;
-        
-        if(data.length === 0) area.innerHTML = '<div class="loading">Maç bulunamadı.</div>';
-        else renderFootball(data);
+    let endpoint = "";
+    if (currentSport === 'football') {
+        // Futbol ID:1 (Trial versiyon)
+        endpoint = "/api/sportbex/league/1/matches?page=1&perPage=50";
     } else {
-        data = Array.isArray(json) ? json : (json.result || []);
-        if(data.length === 0) area.innerHTML = '<div class="loading">Lig bulunamadı.</div>';
-        else renderBasketball(data);
+        // Basketbol Lig Listesi ID:7522
+        endpoint = "/api/basket/competitions/7522";
     }
-  } catch (e) {
-    area.innerHTML = '<div class="loading">Hata oluştu.</div>';
+
+    const res = await fetch(endpoint, {
+        headers: { "sportbex-api-key": API_KEY }
+    });
+
+    if (!res.ok) throw new Error(`API Hatası: ${res.status}`);
+    const data = await res.json();
+    
+    let items = [];
+    
+    if(currentSport === 'football') {
+       if(Array.isArray(data)) items = data;
+       else if(data.results) items = data.results;
+       else if(data.data) items = data.data;
+
+       if(items.length === 0) listDiv.innerHTML = "<div class='loading'>Şu an maç yok. (ID: 1)</div>";
+       else renderFootball(items);
+
+    } else {
+       items = Array.isArray(data) ? data : (data.result || []);
+       if(items.length === 0) listDiv.innerHTML = "<div class='loading'>Basketbol verisi yok.</div>";
+       else renderBasketball(items);
+    }
+
+  } catch (err) {
+    listDiv.innerHTML = "";
+    errorDiv.style.display = 'block';
+    errorDiv.innerHTML = `Bağlantı Hatası: ${err.message}`;
   }
 }
 
+// Futbol Render (Lig Gruplamalı)
 function renderFootball(matches) {
-  const area = document.getElementById('list-area');
+  const listDiv = document.getElementById("match-container");
   const grouped = {};
-  
+
   matches.forEach(m => {
-    let league = m.competition?.name || "Diğer Ligler";
+    let league = m.competition?.name || m.league_name || "Diğer Maçlar";
     if(!grouped[league]) grouped[league] = [];
     grouped[league].push(m);
   });
 
   let html = "";
   for (const [league, items] of Object.entries(grouped)) {
-    html += `<div class="card"><div class="league-header"><div class="flag">${league.charAt(0)}</div><div class="league-info"><span class="league-name">${league}</span></div></div>`;
+    html += `
+      <div class="league-group">
+        <div class="lg-header"><span class="flag"></span> ${league}</div>`;
     
     items.forEach(m => {
-      let h = m.homeTeam?.name || "Ev Sahibi";
-      let a = m.awayTeam?.name || "Deplasman";
+      let h = m.homeTeam?.name || m.home_team || "Ev Sahibi";
+      let a = m.awayTeam?.name || m.away_team || "Deplasman";
       let hs = m.score?.home ?? "-";
       let as = m.score?.away ?? "-";
+      let time = m.matchDate ? new Date(m.matchDate).toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'}) : 'MS';
       let id = m.matchId || m.id;
-      // BURASI ÖNEMLİ: Sport belirtiyoruz
       let url = id ? `match.html?id=${id}&sport=football` : '#';
 
-      html += `<div class="match-row" onclick="location.href='${url}'">
-        <div class="status-col"><span>MS</span></div>
-        <div class="teams-col">
-          <div class="team"><span>${h}</span><span class="score">${hs}</span></div>
-          <div class="team"><span>${a}</span><span class="score">${as}</span></div>
-        </div>
-      </div>`;
+      html += `
+        <div class="match-row" onclick="location.href='${url}'">
+          <div class="m-status"><span>${time}</span></div>
+          <div class="m-teams">
+            <div style="text-align:right; flex:1">${h}</div>
+            <div class="m-score">${hs} - ${as}</div>
+            <div style="text-align:left; flex:1">${a}</div>
+          </div>
+        </div>`;
     });
     html += `</div>`;
   }
-  area.innerHTML = html;
+  listDiv.innerHTML = html;
 }
 
-function renderBasketball(leagues) {
-    const area = document.getElementById('list-area');
-    let html = "";
-    leagues.forEach(l => {
-        let name = l.competition?.name || l.name;
-        let id = l.competition?.id;
-        // Basketbolda lige tıklayınca ID'yi alert ile görelim (Şimdilik)
-        // Çünkü bu API'de basketbol fikstürü çekmek karmaşık
-        html += `<div class="card" onclick="alert('Basketbol ID: ${id}')">
-            <div class="match-row">
-                <div class="status-col" style="color:#FF9800; font-weight:bold">BSK</div>
-                <div class="teams-col"><div class="team winner" style="font-size:16px">${name}</div></div>
-            </div>
-        </div>`;
-    });
-    area.innerHTML = html;
+// Basketbol Render (Lig Listesi)
+function renderBasketball(items) {
+  const listDiv = document.getElementById("match-container");
+  let html = "";
+  
+  items.forEach(item => {
+    let comp = item.competition || item; 
+    let name = comp.name || "Bilinmeyen Lig";
+    let region = comp.competitionRegion || "Dünya";
+    let id = comp.id;
+
+    // Basketbolda lige tıklayınca uyarı verelim veya ID gösterelim
+    html += `
+      <div class="league-group" onclick="alert('Bu ligin detayları Sportbex Trial sürümünde kısıtlı olabilir. ID: ${id}')" style="cursor:pointer">
+        <div class="match-row">
+           <div class="m-status" style="color:var(--gold)">LİG</div>
+           <div class="m-teams">
+             <div style="text-align:left; font-size:16px">${name} <span style="font-size:12px; color:#666">(${region})</span></div>
+           </div>
+        </div>
+      </div>`;
+  });
+  listDiv.innerHTML = html;
 }
 </script>
 </body>

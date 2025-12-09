@@ -4,42 +4,52 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maç Detayı</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    :root { --primary: #374DF5; --bg: #EDEFF4; --surface: #FFFFFF; }
-    body { font-family: 'Roboto', sans-serif; background: var(--bg); margin: 0; }
+    :root {
+      --bg: #121212;
+      --card: #1e1e1e;
+      --text: #e0e0e0;
+      --gold: #FFD700;
+    }
+    body { font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--text); margin: 0; }
+
+    .header {
+      background: linear-gradient(180deg, #000 0%, #1a1a1a 100%);
+      padding: 30px 20px; text-align: center; border-bottom: 2px solid var(--gold);
+    }
+    .back-link { position: absolute; top: 20px; left: 20px; color: #888; font-size: 12px; cursor: pointer; text-decoration: none; }
     
-    .header-bg { background: linear-gradient(135deg, #374DF5 0%, #2A3AB8 100%); color: white; padding: 20px 0 40px 0; }
-    .nav { padding: 0 20px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+    .scoreboard { display: flex; justify-content: center; align-items: center; margin-top: 20px; }
+    .team { width: 40%; font-size: 20px; font-weight: 700; font-family: 'Rajdhani', sans-serif; }
+    .score { font-size: 48px; font-weight: 700; color: var(--gold); padding: 0 20px; text-shadow: 0 0 20px rgba(255,215,0,0.3); }
+
+    .container { width: 60%; margin: 30px auto; }
     
-    .scoreboard { display: flex; justify-content: center; align-items: center; margin-top: 20px; text-align: center; }
-    .team { width: 40%; font-weight: 700; font-size: 18px; }
-    .score { font-size: 42px; font-weight: 700; background: rgba(0,0,0,0.1); padding: 0 20px; border-radius: 12px; }
-    
-    .container { max-width: 800px; margin: -20px auto 0 auto; padding: 0 10px; }
-    .card { background: var(--surface); border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    .title { font-size: 12px; font-weight: 700; color: #7F8C9D; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
-    
-    .stat-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
-    .bar-bg { flex: 1; height: 6px; background: #eee; border-radius: 3px; margin: 5px 10px; position: relative; }
-    .bar-fill { position: absolute; height: 100%; border-radius: 3px; background: var(--primary); }
+    .stat-card { background: var(--card); border: 1px solid #333; border-radius: 8px; padding: 20px; margin-bottom: 15px; }
+    .stat-title { font-family: 'Rajdhani', sans-serif; color: var(--gold); font-size: 18px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+
+    .stat-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; }
+    .bar-container { display: flex; height: 6px; background: #333; margin-top: 5px; border-radius: 3px; overflow: hidden; }
+    .bar-fill { background: var(--gold); height: 100%; }
+    .bar-fill.away { background: #555; }
   </style>
 </head>
 <body>
 
-<div class="header-bg">
-  <div class="nav" onclick="location.href='index.html'">❮ Geri</div>
+<div class="header">
+  <a href="index.html" class="back-link">❮ GERİ DÖN</a>
   <div class="scoreboard">
-    <div class="team" id="h-name">...</div>
+    <div class="team" id="home">...</div>
     <div class="score" id="score">-:-</div>
-    <div class="team" id="a-name">...</div>
+    <div class="team" id="away">...</div>
   </div>
 </div>
 
 <div class="container">
-  <div class="card" id="stats-card">
-    <div class="title">MAÇ İSTATİSTİKLERİ</div>
-    <div id="stats-content">Yükleniyor...</div>
+  <div class="stat-card" id="stats-area">
+    <div class="stat-title">MAÇ İSTATİSTİKLERİ</div>
+    <div style="text-align:center; color:#666">Yükleniyor...</div>
   </div>
 </div>
 
@@ -47,63 +57,69 @@
 const API_KEY = "8aPROa85kIgwqnTOhMQFEokJ4Jtc6oY1Pn9DUG7G"; 
 const p = new URLSearchParams(location.search);
 const id = p.get('id');
-const sport = p.get('sport'); // URL'den sporu alıyoruz
+const sport = p.get('sport');
+
+// Renk ayarı
+if(sport === 'basketball') document.documentElement.style.setProperty('--gold', '#FF9800');
+
+init();
 
 async function init() {
   if(!id) return;
 
-  // EĞER BASKETBOL İSE FARKLI DAVRAN
   if(sport === 'basketball') {
-      document.getElementById('h-name').innerText = "Ev Sahibi";
-      document.getElementById('a-name').innerText = "Deplasman";
+      document.getElementById('home').innerText = "Ev Sahibi";
+      document.getElementById('away').innerText = "Deplasman";
       document.getElementById('score').innerText = "VS";
-      document.getElementById('stats-content').innerHTML = "Basketbol detayları şu an kullanılamıyor.";
-      return; 
+      document.getElementById('stats-area').innerHTML = "<div style='padding:20px; text-align:center'>Basketbol detayları şu an kullanılamıyor.</div>";
+      return;
   }
 
-  // EĞER FUTBOL İSE
+  // FUTBOL
   try {
-    const res = await fetch(`/api/soccer/match/${id}`, { headers: { "sportbex-api-key": API_KEY } });
+    const res = await fetch(`/api/sportbex/match/${id}`, { headers: { "sportbex-api-key": API_KEY } });
     const data = await res.json();
     const m = data.result || data;
 
-    document.getElementById('h-name').innerText = m.homeTeam?.name || "Ev";
-    document.getElementById('a-name').innerText = m.awayTeam?.name || "Dep";
+    document.getElementById('home').innerText = m.homeTeam?.name || "Ev";
+    document.getElementById('away').innerText = m.awayTeam?.name || "Dep";
     let s = (m.score?.home ?? 0) + "-" + (m.score?.away ?? 0);
     document.getElementById('score').innerText = s;
 
-    // İstatistik Simülasyonu (API vermediği için)
     renderStats();
 
   } catch(e) {
-    document.getElementById('stats-content').innerText = "Veri alınamadı.";
+    document.getElementById('stats-area').innerHTML = "Veri alınamadı.";
   }
 }
 
 function renderStats() {
-    const box = document.getElementById('stats-content');
+    const area = document.getElementById('stats-area');
+    // API detay vermediği için simüle ediyoruz
     const stats = [
-        {n:"Topla Oynama", h:55, a:45},
-        {n:"Şut", h:12, a:7},
-        {n:"Korner", h:5, a:2}
+        {name: "Topla Oynama", h: 52, a: 48, u: "%"},
+        {name: "Şut", h: 10, a: 6, u: ""},
+        {name: "Korner", h: 5, a: 3, u: ""},
+        {name: "Faul", h: 12, a: 14, u: ""}
     ];
-    let html = "";
+
+    let html = `<div class="stat-title">MAÇ İSTATİSTİKLERİ</div>`;
     stats.forEach(s => {
         html += `
-        <div class="stat-row">
-            <div style="width:30px">${s.h}</div>
-            <div style="flex:1; text-align:center; color:#666; font-size:12px">${s.n}</div>
-            <div style="width:30px; text-align:right">${s.a}</div>
-        </div>
-        <div style="display:flex; margin-bottom:15px">
-            <div class="bar-bg"><div class="bar-fill" style="width:${s.h}%; right:0; background:#374DF5"></div></div>
-            <div class="bar-bg"><div class="bar-fill" style="width:${s.a}%; left:0; background:#374DF5; opacity:0.5"></div></div>
+        <div style="margin-bottom:20px">
+            <div class="stat-row">
+                <span style="font-weight:bold">${s.h}${s.u}</span>
+                <span style="color:#888">${s.name}</span>
+                <span style="font-weight:bold">${s.a}${s.u}</span>
+            </div>
+            <div class="bar-container">
+                <div class="bar-fill" style="width:${s.h}%"></div>
+                <div class="bar-fill away" style="width:${s.a}%"></div>
+            </div>
         </div>`;
     });
-    box.innerHTML = html;
+    area.innerHTML = html;
 }
-
-init();
 </script>
 </body>
 </html>
