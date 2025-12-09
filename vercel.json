@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/api/sportbex/:path*",
+      "source": "/api/soccer/:path*",
       "destination": "https://trial-api.sportbex.com/api/soccer/:path*"
     },
     {
