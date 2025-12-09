@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/sportbex/:path*",
+      "destination": "https://trial-api.sportbex.com/api/soccer/:path*"
+    },
+    {
+      "source": "/api/basket/:path*",
+      "destination": "https://trial-api.sportbex.com/api/betfair/:path*"
+    }
+  ]
+}
