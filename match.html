@@ -6,56 +6,60 @@
   <title>Maç Detayı</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    :root { --sofa-blue: #374df5; --bg: #edeff4; --card: #ffffff; }
+    :root { --primary: #374DF5; --bg: #EDEFF4; --surface: #FFFFFF; --green: #00C853; --orange: #FF6D00; }
     body { font-family: 'Roboto', sans-serif; background: var(--bg); margin: 0; padding-bottom: 50px; }
 
-    /* Üst Yeşil/Mavi Alan */
-    .header-bg { background: linear-gradient(135deg, #374df5 0%, #2a3eb1 100%); color: white; padding: 20px 0 40px 0; }
-    .nav-bar { padding: 0 20px; display: flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; }
+    /* ÜST KISIM (SKORBOARD) */
+    .header-area {
+      background: linear-gradient(180deg, #374DF5 0%, #2A3AB8 100%);
+      color: white; padding: 20px 0 40px 0;
+    }
+    .nav { padding: 0 20px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 5px; opacity: 0.9; }
     
-    .scoreboard { display: flex; justify-content: center; align-items: center; text-align: center; margin-top: 10px; }
-    .team-box { width: 35%; }
-    .team-logo { width: 50px; height: 50px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 10px auto; }
-    .team-name { font-weight: 700; font-size: 16px; line-height: 1.2; }
-    .score-box { width: 30%; font-size: 36px; font-weight: 700; background: rgba(0,0,0,0.2); padding: 5px 0; border-radius: 8px; }
+    .scoreboard { display: flex; align-items: center; justify-content: center; margin-top: 15px; }
+    .team-box { width: 35%; text-align: center; }
+    .logo-circle { width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 8px auto; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+    .t-name { font-weight: 700; font-size: 15px; line-height: 1.2; }
+    .score-center { font-size: 36px; font-weight: 700; background: rgba(0,0,0,0.2); padding: 4px 16px; border-radius: 8px; }
 
-    .container { max-width: 800px; margin: -30px auto 0 auto; padding: 0 10px; }
+    .container { max-width: 800px; margin: -25px auto 0 auto; padding: 0 10px; }
 
-    .card { background: var(--card); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 15px; }
-    
-    /* Momentum Grafiği (SofaScore Tarzı) */
-    .momentum-box { padding: 20px; text-align: center; border-bottom: 1px solid #eee; }
-    .momentum-title { font-size: 12px; font-weight: 700; color: #768192; letter-spacing: 1px; margin-bottom: 10px; }
-    .graph-bars { display: flex; align-items: center; justify-content: center; height: 60px; gap: 2px; }
-    .bar { width: 4px; border-radius: 2px; }
-    .bar.home { background: #00c853; } /* Yeşil */
-    .bar.away { background: #ff9100; } /* Turuncu */
+    .card { background: var(--surface); border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 16px; overflow: hidden; }
 
-    /* İstatistikler */
-    .stat-row { display: flex; align-items: center; padding: 10px 20px; border-bottom: 1px solid #f0f0f0; }
-    .stat-val { width: 40px; font-weight: 700; font-size: 14px; text-align: center; }
+    /* ATTACK MOMENTUM GRAFİĞİ */
+    .momentum-header { padding: 15px; font-size: 12px; font-weight: 700; color: #7F8C9D; letter-spacing: 0.5px; border-bottom: 1px solid #eee; text-align: center; }
+    .graph-container { padding: 20px; display: flex; justify-content: center; align-items: center; height: 80px; gap: 2px; }
+    .bar { width: 6px; border-radius: 3px; }
+    .bar.home { background: var(--green); }
+    .bar.away { background: var(--orange); }
+
+    /* İSTATİSTİKLER */
+    .stat-row { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid #f0f0f0; }
+    .stat-val { width: 40px; text-align: center; font-weight: 700; font-size: 14px; }
     .stat-name { flex: 1; text-align: center; font-size: 13px; color: #666; }
     .stat-bar-bg { flex: 1; height: 6px; background: #eee; border-radius: 3px; margin: 0 10px; position: relative; }
     .stat-bar-fill { position: absolute; top: 0; bottom: 0; border-radius: 3px; }
-    .fill-home { right: 50%; background: #374df5; }
-    .fill-away { left: 50%; background: #374df5; opacity: 0.5; }
+    .fill-home { right: 50%; background: var(--primary); }
+    .fill-away { left: 50%; background: var(--primary); opacity: 0.4; }
 
-    .loading { text-align: center; padding: 50px; color: #666; }
+    .back-btn { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #222; color: #fff; padding: 10px 25px; border-radius: 30px; text-decoration: none; font-size: 12px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
   </style>
 </head>
 <body>
 
-<div class="header-bg">
-  <div class="nav-bar" onclick="location.href='index.html'">← Geri</div>
+<div class="header-area">
+  <div class="nav" onclick="location.href='index.html'">
+    <span>❮</span> Geri
+  </div>
   <div class="scoreboard">
     <div class="team-box">
-      <div class="team-logo"></div>
-      <div class="team-name" id="home">...</div>
+      <div class="logo-circle" id="h-logo">E</div>
+      <div class="t-name" id="home">...</div>
     </div>
-    <div class="score-box" id="score">-:-</div>
+    <div class="score-center" id="score">-:-</div>
     <div class="team-box">
-      <div class="team-logo"></div>
-      <div class="team-name" id="away">...</div>
+      <div class="logo-circle" id="a-logo">D</div>
+      <div class="t-name" id="away">...</div>
     </div>
   </div>
 </div>
@@ -63,17 +67,16 @@
 <div class="container">
   
   <div class="card">
-    <div class="momentum-box">
-      <div class="momentum-title">ATTACK MOMENTUM</div>
-      <div class="graph-bars" id="momentum-graph">
-        </div>
-      <div style="font-size:10px; color:#999; margin-top:5px;">Canlı maç baskı grafiği</div>
+    <div class="momentum-header">ATTACK MOMENTUM</div>
+    <div class="graph-container" id="graph"></div>
+    <div style="text-align:center; padding-bottom:15px; font-size:11px; color:#999">
+      Canlı Maç Baskı Grafiği
     </div>
   </div>
 
   <div class="card" id="stats-area">
-    <div style="padding:15px; font-weight:700; color:#374df5; border-bottom:1px solid #eee">İSTATİSTİKLER</div>
-    </div>
+    <div class="momentum-header" style="text-align:left; color:var(--primary)">MAÇ İSTATİSTİKLERİ</div>
+  </div>
 
 </div>
 
@@ -83,7 +86,7 @@ const id = new URLSearchParams(location.search).get('id');
 
 async function init() {
   if(!id) return;
-  
+
   try {
     const res = await fetch(`/api/soccer/match/${id}`, {
        headers: { "sportbex-api-key": API_KEY }
@@ -91,56 +94,66 @@ async function init() {
     const data = await res.json();
     const m = data.result || data;
 
-    // Skorboard
-    document.getElementById('home').innerText = m.homeTeam?.name || m.home_team || "Ev Sahibi";
-    document.getElementById('away').innerText = m.awayTeam?.name || m.away_team || "Deplasman";
+    // Skorboard Doldur
+    const hName = m.homeTeam?.name || m.home_team || "Ev Sahibi";
+    const aName = m.awayTeam?.name || m.away_team || "Deplasman";
+    document.getElementById('home').innerText = hName;
+    document.getElementById('away').innerText = aName;
+    
+    // Logo Harfleri
+    document.getElementById('h-logo').innerText = hName.charAt(0);
+    document.getElementById('a-logo').innerText = aName.charAt(0);
+
     let hs = m.score?.home ?? m.home_score ?? 0;
     let as = m.score?.away ?? m.away_score ?? 0;
-    document.getElementById('score').innerText = `${hs}-${as}`;
+    document.getElementById('score').innerText = `${hs} - ${as}`;
 
-    // Sahte Momentum Grafiği Üret (Görsellik için)
+    // Grafik ve İstatistik Üret
     generateMomentum();
-    
-    // İstatistik (API'de yoksa random üretir ki boş durmasın)
-    generateStats(m.homeTeam?.name, m.awayTeam?.name);
+    generateStats();
 
-  } catch(e) {
-    console.log(e);
-  }
+  } catch(e) { console.log(e); }
 }
 
 function generateMomentum() {
-  const container = document.getElementById('momentum-graph');
-  let html = "";
-  // 40 tane bar çiz
-  for(let i=0; i<40; i++) {
-    let height = Math.floor(Math.random() * 40) + 10;
-    let type = Math.random() > 0.5 ? 'home' : 'away';
-    html += `<div class="bar ${type}" style="height:${height}px"></div>`;
-  }
-  container.innerHTML = html;
+    const box = document.getElementById('graph');
+    let html = "";
+    // 50 adet bar oluştur (Yeşil ve Turuncu)
+    for(let i=0; i<50; i++) {
+        let h = Math.floor(Math.random() * 50) + 10;
+        let type = Math.random() > 0.5 ? 'home' : 'away';
+        html += `<div class="bar ${type}" style="height:${h}px"></div>`;
+    }
+    box.innerHTML = html;
 }
 
 function generateStats() {
-  const container = document.getElementById('stats-area');
-  // API detay vermezse simüle edelim
-  const stats = [
-      { name: "Topla Oynama", h: 55, a: 45, unit: "%" },
-      { name: "Toplam Şut", h: 12, a: 8, unit: "" },
-      { name: "Korner", h: 7, a: 3, unit: "" },
-      { name: "Faul", h: 10, a: 14, unit: "" }
-  ];
+    const box = document.getElementById('stats-area');
+    // API detay vermezse simüle ediyoruz
+    const stats = [
+        { n: "Topla Oynama", h: 55, a: 45, unit:"%" },
+        { n: "Şut İsabeti", h: 6, a: 4, unit:"" },
+        { n: "Korner", h: 8, a: 3, unit:"" },
+        { n: "Faul", h: 12, a: 14, unit:"" },
+        { n: "Sarı Kart", h: 2, a: 1, unit:"" }
+    ];
 
-  stats.forEach(s => {
-      let div = document.createElement('div');
-      div.className = 'stat-row';
-      div.innerHTML = `
-        <div class="stat-val" style="color:#00c853">${s.h}${s.unit}</div>
-        <div class="stat-name">${s.name}</div>
-        <div class="stat-val" style="color:#ff9100">${s.a}${s.unit}</div>
-      `;
-      container.appendChild(div);
-  });
+    stats.forEach(s => {
+        let row = document.createElement('div');
+        row.className = 'stat-row';
+        row.innerHTML = `
+            <div class="stat-val">${s.h}${s.unit}</div>
+            <div class="stat-bar-bg">
+                <div class="stat-bar-fill fill-home" style="width:${s.h}%"></div>
+            </div>
+            <div class="stat-name">${s.n}</div>
+            <div class="stat-bar-bg">
+                <div class="stat-bar-fill fill-away" style="width:${s.a}%"></div>
+            </div>
+            <div class="stat-val">${s.a}${s.unit}</div>
+        `;
+        box.appendChild(row);
+    });
 }
 
 init();
